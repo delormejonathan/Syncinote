@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="SynciNote">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<link rel="shortcut icon" href="favicon.ico">
+
+		<title>SynciNote</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href='//fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+		<link href="css/vendor/bootstrap.min.css" rel="stylesheet">
+		<link href="css/vendor/font-awesome.min.css" rel="stylesheet">
+		<link href="css/app.css" rel="stylesheet">
+
+
+		<!-- JS Librairies -->
+		<script src="js/vendor/angular.min.js"></script>
+		<script src="js/vendor/angular-animate.min.js"></script>
+		<script src="js/vendor/jquery.min.js"></script>
+		<script src="js/vendor/bootstrap.min.js"></script>
+		<script src="js/vendor/moment-with-langs.min.js"></script>
+
+		<!-- Dropbox API -->
+		<script src="js/vendor/dropbox.api.min.js" type="text/javascript"></script>
+
+		<!-- App Core JS -->
+		<script src="app/app.js"></script>
+		<script src="app/controllers/tasks.js"></script>
+		<script src="app/directives.js"></script>
+		<script src="app/services.js"></script>
+	</head>
+
+	<body>
+
+		<div class="app">
+			<div class="headbar">
+				<div class="task-toggle active" task-toggle>
+					<a href="#" ><span class="fa fa-check-square-o"></span></a>
+					<span class="brand">SYNCINOTE</span>
+				</div>
+				<a href="#" class="settings pull-right"><span class="fa fa-cogs"></span></a>
+			</div>
+
+
+			<div class="wide-container">
+				<div class="tasks" ng-controller="tasksController">
+					<div class="head">
+						Liste des tâches
+						<a href="#" class="pull-right" ng-click="clear(true)"><span class="fa fa-trash-o"></span></a>
+					</div>
+					<div class="add">
+						<form name="taskForm" ng-submit="save()" novalidate>
+							<input type="text" name="name" ng-model="name" placeholder="Ajouter une tâche" autocomplete="off" required/>
+						</form>
+					</div>
+					<div class="list">
+						<div class="sync" ng-show="sync == 0">Synchronisation en cours</div>
+						<div class="empty" ng-show="tasks.length == 0 && firstSync == true">Aucune tâche</div>
+						<div class="task" ng-repeat="task in tasks" ng-click="update(task)" ng-class="{done: task.done}">
+							{{ task.name }}
+						</div>
+					</div>
+				</div>
+				<div class="notes">
+					<div class="row">
+						<div class="col-lg-4">
+							<div class="list">
+								<div class="note">
+									<h1 class="title">Installation de FG Atelier</h1>
+									<div class="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</div>
+								</div>
+							</div>
+							
+						</div>
+						<div class="col-lg-8"></div>
+					</div>
+				</div>
+			</div> <!-- /container -->
+		</div>
+		
+
+		<div class="login">
+			<div class="login-overlay">
+				<div class="login-modal">
+					<div class="header">
+						<span class="brand">SynciNote</span>
+					</div>
+					<div class="content">
+						<p>Bienvenue sur SynciNote. Pour commencer à utiliser à l'application, synchroniser votre compte Dropbox !</p>
+						<p><button class="btn btn-default" ng-click="client.authenticate();">Autoriser l'application</button></p>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,192 @@
+
+.app {
+	background-color: #fdfdfd;
+}
+.app.login-opened {
+	-webkit-filter: blur(2px);
+}
+
+/*HEADBAR*/
+.app .headbar {
+	height: 35px;
+	line-height: 33px;
+	background-color: #2f2f2f;
+	border-bottom: 2px solid #8a8a8a;
+}
+.app .headbar .task-toggle {
+	display: inline-block;
+	max-height: 35px;
+}
+.app .headbar .task-toggle.active a{
+	background-color: #474747;
+}
+.app .headbar .task-toggle.active {
+	border-bottom: 2px solid #1bbc9b;
+}
+.app .headbar a {
+	display: inline-block;
+	text-align: center;
+	cursor: pointer;
+	vertical-align: top;
+	background-image: none;
+	background: none;
+	color:white;
+	border:none;
+	font-size: 24px;
+	height: 33px;
+}
+.app .headbar .task-toggle a {
+	padding: 2px 10px 0px 10px;
+	margin-right: 20px;
+}
+
+.app .headbar .brand {
+	color: #1bbc9b;
+	font-family: "Montserrat";
+	font-weight: bold;
+	font-size: 28pt;
+}
+
+/* TASKS */
+.app .tasks {
+	width: 290px;
+	position: absolute;
+	top: 35px;
+	bottom: 0;
+	left: 0;
+	padding: 0;
+	background-color: #fbfbfb;
+	border-right: 1px solid #dddddd;
+	-moz-box-shadow: 0px 5px 1px #ccc;
+	-webkit-box-shadow: 0px 5px 1px #ccc;
+	box-shadow: 0px 5px 1px #ccc;
+}
+.app .tasks .head {
+	padding: 0 0 0 5px;
+	background-color: #009778;
+	font-family: "Montserrat";
+	font-size: 15pt;
+	color:white;
+	border-bottom: 1px solid #cacaca;
+	border-right: 1px solid #009778;
+}
+.app .tasks .head a {
+	color: white;
+	padding: 0 5px;
+}
+.app .tasks .head a:hover {
+	background: #09bf9a;
+}
+.app .tasks .add {
+	padding: 5px 5px;
+	background-color: #eeeeee;
+}
+.app .tasks .add input {
+	display: inline-block;
+	width: 100%;
+	padding: 5px;
+}
+.app .tasks .empty,
+.app .tasks .sync {
+	padding-top: 20px;
+	font-size: 13pt;
+	color: #cccccc;
+	text-align: center;
+	text-transform: uppercase;
+}
+.app .tasks .task {
+	padding: 10px 10px;
+	border-left: 5px solid #009778;
+	border-bottom: 1px solid #c0c0c0;
+	color: #4f4e4e;
+	background-color: #f5f5f5;
+	cursor: pointer;
+	font-size: 12pt;
+}
+.app .tasks .task:hover {
+	background-color: #f1f1f1;
+}
+.app .tasks .task.done {
+	text-decoration: line-through;
+	border-left: 0;
+	font-size: 10pt;
+}
+
+.app .notes {
+	position: absolute;
+	top: 35px;
+	bottom: 0;
+	left: 290px;
+	right: 0;
+	padding: 20px;
+}
+
+.login {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: auto;
+	border-radius: 10px;
+	z-index: -1;
+	display:none;
+	
+	-webkit-box-shadow: 3px 3px 3px rgba(0,0,0,0.1);
+	box-shadow: 3px 3px 3px rgba(0,0,0,0.1);
+	opacity: 0;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+	filter: alpha(opacity=0);
+	
+	-webkit-transition: opacity 1s ease;
+	-moz-transition: opacity 1s ease;
+	-ms-transition: opacity 1s ease;
+	-o-transition: opacity 1s ease;
+	transition: opacity 1s ease;
+}
+.login.active {
+	display:block;
+	opacity: 1;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=1)";
+	filter: alpha(opacity=1);
+	z-index: 2100;
+}
+
+.login,
+.login .login-overlay,
+.login .login-modal
+{
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: auto;
+}
+
+.login .login-overlay {
+	background: rgba(0,0,0,0.5);
+}
+.login .login-modal {
+	width: 500px;
+	height: 250px;
+	background-color: white;
+	box-shadow: 0px 0px 20px rgba( 0, 0, 0, 0.4 );
+	border: 1px solid #464646;
+}
+
+.login .login-modal .header {
+	height: 45px;
+	line-height: 43px;
+	background-color: #1BBC9B;
+	padding: 0 20px;
+	color: white;
+	font-family: "Montserrat";
+	font-size: 22pt;
+	font-weight: bold;
+}
+
+
+.login .login-modal .content {
+	padding: 20px;
+}

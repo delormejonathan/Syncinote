@@ -1,0 +1,1 @@
+server 'dedibox', user: 'sysadmin', roles: %w{web app db}

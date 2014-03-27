@@ -74,4 +74,28 @@ directive('tooltip', function() {
 			});
 		}
 	};
+}).
+directive('epiceditor', function() {
+	return {
+		link: function(scope, element, attrs) {
+			scope.editor = new EpicEditor({
+				container: $(element).attr('id'),
+				theme: {
+					base: '../../css/vendor/epiceditor/epiceditor.css',
+					preview: '../../css/vendor/epiceditor/preview/github.css',
+					editor: '../../css/vendor/epiceditor/editor/epic-dark.css'
+				},
+				focusOnLoad: true,
+				clientSideStorage: false,
+				autogrow: {
+					minHeight: $(element).parent().resize(function() {
+									return $(this).height();
+								}),
+					maxHeight: false
+				}
+			}).load(function() {
+				scope.load(this);
+			});
+		}
+	};
 });

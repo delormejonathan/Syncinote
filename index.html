@@ -10,25 +10,29 @@
 
 		<title>SynciNote</title>
 
-		<!-- Bootstrap core CSS -->
+		<!--CSS -->
 		<link href='//fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 		<link href="css/vendor/bootstrap.min.css" rel="stylesheet">
 		<link href="css/vendor/font-awesome.min.css" rel="stylesheet">
+		<link href="css/vendor/epiceditor/epiceditor.css" rel="stylesheet">
 		<link href="css/app.css" rel="stylesheet">
 
 
 		<!-- JS Librairies -->
 		<script src="js/vendor/angular.min.js"></script>
 		<script src="js/vendor/angular-animate.min.js"></script>
+		<script src="js/vendor/angular-route.min.js"></script>
 		<script src="js/vendor/jquery.min.js"></script>
 		<script src="js/vendor/bootstrap.min.js"></script>
 		<script src="js/vendor/moment-with-langs.min.js"></script>
+		<script src="js/vendor/epiceditor.min.js"></script>
 
 		<!-- Dropbox API -->
 		<script src="js/vendor/dropbox.api.min.js" type="text/javascript"></script>
 
 		<!-- App Core JS -->
 		<script src="app/app.js"></script>
+		<script src="app/controllers/notes.js"></script>
 		<script src="app/controllers/tasks.js"></script>
 		<script src="app/directives.js"></script>
 		<script src="app/services.js"></script>
@@ -47,7 +51,7 @@
 
 
 			<div class="wide-container">
-				<div class="tasks" ng-controller="tasksController">
+				<div class="tasks" ng-controller="tasksCtrl">
 					<div class="head">
 						Liste des tâches
 						<a href="#" class="pull-right" ng-click="clear(true)"><span class="fa fa-trash-o"></span></a>
@@ -57,26 +61,37 @@
 							<input type="text" name="name" ng-model="name" placeholder="Ajouter une tâche" autocomplete="off" required/>
 						</form>
 					</div>
-					<div class="list">
-						<div class="sync" ng-show="sync == 0">Synchronisation en cours</div>
-						<div class="empty" ng-show="tasks.length == 0 && firstSync == true">Aucune tâche</div>
-						<div class="task" ng-repeat="task in tasks" ng-click="update(task)" ng-class="{done: task.done}">
-							{{ task.name }}
+					<div class="list-container">
+						<div class="list">
+							<div class="sync" ng-show="sync == 0">Synchronisation en cours</div>
+							<div class="empty" ng-show="tasks.length == 0 && firstSync == true">Aucune tâche</div>
+							<div class="task" ng-repeat="task in tasks" ng-click="update(task)" ng-class="{done: task.done}">
+								{{ task.name }}
+							</div>
 						</div>
 					</div>
 				</div>
 				<div class="notes">
-					<div class="row">
-						<div class="col-lg-4">
+					<div class="left" ng-controller="notesListCtrl">
+						<div class="head">
+							<span class="title">Notes</span>
+							<input type="text" class="search pull-right" ng-model="search" placeholder="Recherche">
+							<a href="#/notes/add" class="add pull-right"><span class="fa fa-plus"></span></a>
+						</div>
+						
+						<div class="list-container">
 							<div class="list">
-								<div class="note">
-									<h1 class="title">Installation</h1>
-									<div class="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</div>
+								<div ng-repeat="note in notes | filter : search" ng-click="open(note.id)" ng-class="{ active : note.id == id }" class="note">
+									<h1 class="title">{{ note.title }}</h1>
+									<div class="content">{{ note.content }}</div>
 								</div>
 							</div>
-							
 						</div>
-						<div class="col-lg-8"></div>
+					</div>
+					<div class="right">
+						<div class="editor" ng-view>
+							test
+						</div>
 					</div>
 				</div>
 			</div> <!-- /container -->

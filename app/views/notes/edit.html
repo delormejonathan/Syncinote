@@ -1,0 +1,9 @@
+<div class="head">
+	<span class="title">{{ action }} une note</span>
+	<a href="" class="add pull-right" ng-click="delete()" ng-show="note.id != null"><span class="fa fa-trash-o"></span></a>
+	<a href="" class="add pull-right" ng-click="save()"><span class="fa fa-floppy-o"></span></a>
+</div>
+<input type="text" name="title" class="title" ng-model="note.title" placeholder="Sans titre" autocomplete="off">
+<div id="epiceditor-container">
+	<div id="epiceditor" epiceditor></div>
+</div>

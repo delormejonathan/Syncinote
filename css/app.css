@@ -1,5 +1,12 @@
-
+html,body {
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
 .app {
+	position: relative;
+	width: 100%;
+	height: 100%;
 	background-color: #fdfdfd;
 }
 .app.login-opened {
@@ -8,16 +15,20 @@
 
 /*HEADBAR*/
 .app .headbar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
 	height: 35px;
 	line-height: 33px;
 	background-color: #2f2f2f;
-	border-bottom: 2px solid #8a8a8a;
+	border-bottom: 2px solid #7a7a7a;
 }
 .app .headbar .task-toggle {
 	display: inline-block;
 	max-height: 35px;
 }
-.app .headbar .task-toggle.active a{
+.app .headbar .task-toggle.active a {
 	background-color: #474747;
 }
 .app .headbar .task-toggle.active {
@@ -47,14 +58,48 @@
 	font-size: 28pt;
 }
 
+.app .wide-container {
+	position: relative;
+	clear:both;
+	width: 100%;
+	height: 100%;
+	padding-top: 35px;
+}
+
+/* RESPONSIVE */
+@media (max-width:1200px)
+{
+	.app .tasks {
+		display: none !important;
+	}
+}
+@media (max-width:1600px)
+{
+	.app .tasks {
+		width: 20% !important;
+	}
+	.app .notes {
+		width: 80% !important;
+	}
+}
+
+@media (min-width:1600px)
+{
+	.app .tasks {
+		width: 17% !important;
+	}
+	.app .notes {
+		width: 83% !important;
+	}
+}
+
+
 /* TASKS */
 .app .tasks {
-	width: 290px;
-	position: absolute;
-	top: 35px;
-	bottom: 0;
-	left: 0;
-	padding: 0;
+	float: left;
+	position: relative;
+	width: 15%;
+	height: 100%;
 	background-color: #fbfbfb;
 	border-right: 1px solid #dddddd;
 	-moz-box-shadow: 0px 5px 1px #ccc;
@@ -62,6 +107,11 @@
 	box-shadow: 0px 5px 1px #ccc;
 }
 .app .tasks .head {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 10;
 	padding: 0 0 0 5px;
 	background-color: #009778;
 	font-family: "Montserrat";
@@ -78,6 +128,11 @@
 	background: #09bf9a;
 }
 .app .tasks .add {
+	z-index: 10;
+	position: absolute;
+	top: 29px;
+	left: 0;
+	width: 100%;
 	padding: 5px 5px;
 	background-color: #eeeeee;
 }
@@ -86,15 +141,25 @@
 	width: 100%;
 	padding: 5px;
 }
-.app .tasks .empty,
-.app .tasks .sync {
+.app .tasks .list-container {
+	z-index: 5;
+	height: 100%;
+	padding-top: 73px;
+	position: relative;
+}
+.app .tasks .list {
+	height: 100%;
+	overflow: auto;
+}
+.app .tasks .list .empty,
+.app .tasks .list .sync {
 	padding-top: 20px;
 	font-size: 13pt;
 	color: #cccccc;
 	text-align: center;
 	text-transform: uppercase;
 }
-.app .tasks .task {
+.app .tasks .list .task {
 	padding: 10px 10px;
 	border-left: 5px solid #009778;
 	border-bottom: 1px solid #c0c0c0;
@@ -103,22 +168,173 @@
 	cursor: pointer;
 	font-size: 12pt;
 }
-.app .tasks .task:hover {
+.app .tasks .list .task:hover {
 	background-color: #f1f1f1;
 }
-.app .tasks .task.done {
+.app .tasks .list .task.done {
 	text-decoration: line-through;
 	border-left: 0;
 	font-size: 10pt;
 }
 
 .app .notes {
+	float:left;
+	width: 80%;
+	height: 100%;
+	position: relative;
+}
+.app .notes .left
+{
+	float:left;
+	position: relative;
+	height: 100%;
+	width: 33%;
+	float:left;
+}
+.app .notes .right
+{
+	float:left;
+	width: 67%;
+	position: relative;
+	height: 100%;
+}
+.app .notes .left .head {
+	z-index: 10;
 	position: absolute;
-	top: 35px;
-	bottom: 0;
-	left: 290px;
-	right: 0;
+	top: 0;
+	width: 100%;
+	padding: 0 0 0 5px;
+	background-color: #009778;
+	font-family: "Montserrat";
+	font-size: 15pt;
+	color:white;
+	border-bottom: 1px solid #cacaca;
+	border-right: 1px solid #009778;
+	height: 29px;
+}
+.app .notes .left .head a {
+	color: white;
+	padding: 0px 7px;
+	margin-right: 10px;
+}
+.app .notes .left .head a:hover {
+	background: #09bf9a;
+}
+.app .notes .left .head .search {
+	/*width: inherit;*/
+	display: inline-block;
+	color: white;
+	border-top: 0 !important;
+	border-left: 0 !important;
+	border-right: 0 !important;
+	border-bottom: 0 !important;
+	border-radius: 0;
+	box-shadow: none;
+	border-color: #dee3ea;
+	height: 28px;
+	font-size: 10pt;
+	font-weight: normal;
+	outline: none;
+	padding-left: 10px;
+	background: url(../img/search.png) #00ac89 no-repeat 99% 100%;
+}
+.app .notes .left .head .search::-webkit-input-placeholder {
+	color: white;
+}    
+.app .notes .left .head .search:-moz-placeholder {
+	/* FF 4-18 */
+	color: white;
+}
+.app .notes .left .head .search::-moz-placeholder {
+	/* FF 19+ */
+	color: white;
+}    
+.app .notes .left .head .search:-ms-input-placeholder {
+	/* IE 10+ */
+	color: white;
+}
+.app .notes .list-container {
+	z-index: 0;
+	height: 100%;
+	position: relative;
+	padding-top: 29px;
+}
+.app .notes .list {
+	height: 100%;
+	overflow: auto;
+	background-color: #fcfcfc;
+}
+.app .notes .list .note {
 	padding: 20px;
+	border: 1px solid #f3f3f3;
+	cursor: pointer;
+}
+.app .notes .list .note:hover,
+.app .notes .list .note.active
+{
+	border-left: 4px solid #009778;
+}
+.app .notes .list .note .title {
+	font-family: "Montserrat";
+	text-transform: uppercase;
+	font-size: 17pt;
+	margin: 0;
+}
+.app .notes .list .note .title {
+	font-family: "Montserrat";
+	text-transform: uppercase;
+	font-size: 17pt;
+}
+.app .notes .editor {
+	position: relative;
+	height: 100%;
+}
+.app .notes .right .head {
+	z-index: 10;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	padding: 0 0 0 5px;
+	background-color: #009778;
+	font-family: "Montserrat";
+	font-size: 15pt;
+	color:white;
+	border-bottom: 1px solid #cacaca;
+	border-right: 1px solid #009778;
+	height: 29px;
+}
+.app .notes .right .head a {
+	color: white;
+	padding: 0px 7px;
+	margin-right: 10px;
+}
+.app .notes .right .head a:hover {
+	background: #09bf9a;
+}
+.app .notes .right .editor > .title {
+	z-index: 10;
+	display: inline-block;
+	position: absolute;
+	top: 29px;
+	left: 0;
+	height: 39px;
+	background-color: #d4d4d4;
+	width: 100%;
+	padding: 5px 5px;
+	border: 0;
+	font-weight: bold;
+	outline: none;
+	font-size: 14pt;
+}
+.app .notes .right .editor #epiceditor-container {
+	padding-top: 68px;
+	position: relative;
+	height: 100%;
+}
+.app .notes .right .editor #epiceditor {
+	position: relative;
+	height: 100% !important;
+	overflow: auto;
 }
 
 .login {

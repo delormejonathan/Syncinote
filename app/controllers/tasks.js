@@ -1,4 +1,4 @@
-SynciNote.controller('tasksController', function ($rootScope , $scope, $http, dropboxService) {
+SynciNote.controller('tasksCtrl', function ($rootScope , $scope, $http, dropboxService) {
 	$scope.name = null;
 	$scope.tasks = [];
 	$scope.taskTable = null;
@@ -20,8 +20,8 @@ SynciNote.controller('tasksController', function ($rootScope , $scope, $http, dr
 
 		records.sort(function (taskA, taskB) {
 			if (taskB.get('done')) return -1;
-			if (taskA.get('created') < taskB.get('created')) return 1;
-			if (taskA.get('created') > taskB.get('created')) return -1;
+			if (taskA.get('updated') < taskB.get('updated')) return 1;
+			if (taskA.get('updated') > taskB.get('updated')) return -1;
 			return 0;
 		});
 

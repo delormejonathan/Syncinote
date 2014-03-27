@@ -1,4 +1,7 @@
-var SynciNote = angular.module('SynciNote' , ['directives']);
+var SynciNote = angular.module('SynciNote' , [  
+												'ngRoute',
+												'directives'
+											 ]);
 
 SynciNote.run(function($rootScope) {
 	$rootScope.client = new Dropbox.Client({key: "fjt0qeyv21dhzri"});
@@ -11,7 +14,7 @@ SynciNote.run(function($rootScope) {
 	});
 
 	if ($rootScope.client.isAuthenticated()) {
-	    // Client is authenticated. Display UI.
+	    $rootScope.noteCount = 0;
 	}
 	else
 	{
@@ -19,3 +22,18 @@ SynciNote.run(function($rootScope) {
 		$('.login').addClass('active');
 	}
 });
+
+
+SynciNote.config(['$routeProvider',
+	function($routeProvider) {
+		$routeProvider.
+			when('/notes/add', {
+				templateUrl: 'app/views/notes/edit.html',
+				controller: 'notesEditCtrl'
+			}).
+			when('/notes/edit/:id', {
+				templateUrl: 'app/views/notes/edit.html',
+				controller: 'notesEditCtrl'
+			});
+	}
+]);

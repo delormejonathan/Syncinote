@@ -14,17 +14,22 @@ SynciNote.service('dropboxService', function($rootScope) {
 	}
 
 	this.getDatastore = function (callback) {
-		if (this.datastore == null)
+		if ($rootScope.datastore == null)
 		{
 			this.getDatastoreManager().openDefaultDatastore(function (error, datastore) {
 				if (error) {
 					console.log('Error opening default datastore: ' + error);
 				}
 				else {
-					callback(datastore);
+					$rootScope.datastore = datastore;
+					callback($rootScope.datastore);
 				}
 
 			});
+		}
+		else
+		{
+			callback($rootScope.datastore)
 		}
 	}
 

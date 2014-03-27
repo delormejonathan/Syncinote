@@ -26,7 +26,7 @@ directive('taskToggle', function($http) {
 					);
 					$(".app .notes").animate (
 						{
-							left: "-=290",
+							// left: "-=290",
 						}, 
 						{
 							duration: 400, 
@@ -53,7 +53,7 @@ directive('taskToggle', function($http) {
 					);
 					$(".app .notes").animate (
 						{
-							left: "+=290",
+							// left: "+=290",
 						}, 
 						{
 							duration: 400, 

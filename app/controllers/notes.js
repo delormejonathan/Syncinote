@@ -1,22 +1,18 @@
-SynciNote.controller('notesEditCtrl', function ($rootScope , $scope, $http, $location, $routeParams, dropboxService) {
-	$scope.note = { id : null , title : '' , content : ''};
-	$scope.editor = null;
-	$scope.action = 'Ajouter';
-	$scope.noteTable = null;
+SynciNote.controller('notesEditCtrl', function ($rootScope, $scope, $location, $routeParams, moduleService, dropboxService) {
 
-	/*
-		* Start Dropbox Sync
-		* First, we get datastore & table
-		* If we have an id, it's an edit
-		* Due to nonblocking javascript way, sometimes EpicEditor loads faster than Dropbox & vice-versa, so i load twice content to be sure
-	*/
-	if (dropboxService.isAuth())
-	{
+	$scope.action 		= 'Ajouter';
+	$scope.note 		= { id : null , title : '' , content : ''};
+	$scope.editor 		= null;
+	$scope.noteTable 	= null;
+
+	// Activate editor view in mobile app
+	moduleService.activateEditor();
+
+	if (dropboxService.isAuth()) {
 		dropboxService.getDatastore(function (datastore) {
 			$scope.noteTable = datastore.getTable('notes');
 
-			if ($routeParams.id != undefined)
-			{
+			if ($routeParams.id != undefined) {
 				var record = $scope.noteTable.get($routeParams.id);
 				$scope.note = {
 					'id' : record.getId(),
@@ -30,89 +26,76 @@ SynciNote.controller('notesEditCtrl', function ($rootScope , $scope, $http, $loc
 					$scope.editor.importFile($scope.note.id , $scope.note.content);
 
 				$scope.action = 'Éditer';
+				moduleService.noteId = $routeParams.id;
+			}
+			else {
+				moduleService.noteId = null;
 			}
 		});
 	}
 
-	/*
-		* Save a note to Dropbox
-	*/
 	$scope.save = function() {
-
-		// Add a note
-		if ($scope.note.id == null)
-		{
+		if ($scope.note.id == null) {
 			var query = $scope.noteTable.insert({
 				title: $scope.note.title,
 				content: $scope.editor.exportFile(),
 				created: new Date(),
 				updated: new Date()
 			});
+
+			moduleService.noteId = query.getId();
+			$location.path('/notes/edit/' + query.getId());
 		}
-		// Edit a note
-		else
-		{
+		else {
 			var record = $scope.noteTable.get($scope.note.id);
 			record.set('title' , $scope.note.title);
 			record.set('content' , $scope.editor.exportFile());
 			record.set('updated' , new Date());
 		}
-
-		$rootScope.noteCount++;
+		$rootScope.$broadcast('UPDATE_NOTES_LIST');
 	}
 
-	/*
-		* Delete a note
-	*/
 	$scope.delete = function() {
 		var record = $scope.noteTable.get($scope.note.id);
 		record.deleteRecord();
-		$rootScope.noteCount++;
+
+		$scope.$broadcast('UPDATE_NOTES_LIST');
+
+		$location.path('/');
 	}
 
-	/*
-		* Started by EpicEditor directive, it loads content when the plugin is ready
-	*/
 	$scope.load = function(editor) {
 		editor.importFile($scope.note.id , $scope.note.content);
 	}
-
 });
 
-SynciNote.controller('notesListCtrl', function ($rootScope , $scope, $http, $location, dropboxService) {
-	$scope.notes = [];
-	$scope.noteTable = null;
-	$scope.sync = 0;
-	$scope.search = null;
+SynciNote.controller('notesListCtrl', function ($rootScope, $scope, $location, loadingService, moduleService, dropboxService) {
+	$scope.notes 		= [];
+	$scope.noteTable 	= null;
+	$scope.sync 		= 0;
+	$scope.search 		= null;
 
-	/*
-		* Start Dropbox Sync
-		* Add a listener to update notes list
-	*/
-	if (dropboxService.isAuth())
-	{
+	if (dropboxService.isAuth()) {
 		dropboxService.getDatastore(function (datastore) {
 			$scope.noteTable = datastore.getTable('notes');
 			$scope.updateList();
 			datastore.recordsChanged.addListener($scope.updateList);
 		});
 	}
-
-	$rootScope.$watch('noteCount', function( newVal, oldVal ) {
-		if (newVal > oldVal)
-			$scope.updateList(true);
+	
+	$rootScope.$on('UPDATE_NOTES_LIST', function() {
+		$scope.updateList(true);
 	});
 
+	$scope.getNoteId 	= function () {
+		return moduleService.noteId;
+	}
 
-	/*
-		* Update notes list
-		* Sorted by date
-		* We open first note automatically
-	*/
 	$scope.updateList = function (force) {
 		$scope.notes = [];
 		if (force) $scope.id = null;
 		var records = $scope.noteTable.query();
+		loadingService.nextStep();
 
 		records.sort(function (noteA, noteB) {
 			if (noteA.get('updated') < noteB.get('updated')) return 1;
@@ -123,31 +106,24 @@ SynciNote.controller('notesListCtrl', function ($rootScope , $scope, $http, $loc
 		for (var i = 0; i < records.length; i++) {
 			var record = records[i];
 
-			if ($scope.id == null)
-			{
-				$scope.id = record.getId();
-				$scope.open(record.getId());
-			}
-
 			$scope.notes.push({
-					'id' : record.getId(),
-					'title' : record.get('title'),
-					'content' : record.get('content'), 
-					'created' : moment(record.get('created')),
-					'updated' : moment(record.get('updated'))
-				});
-
+				'id' : record.getId(),
+				'title' : record.get('title'),
+				'content' : record.get('content'), 
+				'created' : moment(record.get('created')),
+				'updated' : moment(record.get('updated'))
+			});
 		}
 
 		$scope.sync++;
 
-		if ($scope.sync < 2)
+		if(!$scope.$$phase) {
 			$scope.$apply();
-
+		}
 	}
 
-	$scope.open = function(note_id) {
-		$scope.id = note_id;
-		$location.path('/notes/edit/' + note_id);
+	$scope.open = function(noteId) {
+		moduleService.noteId = noteId;
+		$location.path('/notes/edit/' + noteId);
 	}
 });

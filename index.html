@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="SynciNote">
+<html lang="fr" ng-app="SynciNote">
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,49 +11,50 @@
 		<title>SynciNote</title>
 
 		<!--CSS -->
-		<link href='//fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+		<link href='//fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
 		<link href="css/vendor/bootstrap.min.css" rel="stylesheet">
 		<link href="css/vendor/font-awesome.min.css" rel="stylesheet">
 		<link href="css/vendor/epiceditor/epiceditor.css" rel="stylesheet">
-		<link href="css/app.css" rel="stylesheet">
-
+		<link href="css/dist/main.css" rel="stylesheet">
 
 		<!-- JS Librairies -->
 		<script src="js/vendor/angular.min.js"></script>
 		<script src="js/vendor/angular-animate.min.js"></script>
 		<script src="js/vendor/angular-route.min.js"></script>
 		<script src="js/vendor/jquery.min.js"></script>
+		<script src="js/vendor/jquery-mobilebrowser.min.js"></script>
+		<script src="js/vendor/jquery.cookie.js"></script>
 		<script src="js/vendor/bootstrap.min.js"></script>
 		<script src="js/vendor/moment-with-langs.min.js"></script>
 		<script src="js/vendor/epiceditor.min.js"></script>
 
 		<!-- Dropbox API -->
-		<script src="js/vendor/dropbox.api.min.js" type="text/javascript"></script>
+		<script src="//www.dropbox.com/static/api/dropbox-datastores-1.0-latest.js" type="text/javascript"></script>
 
 		<!-- App Core JS -->
 		<script src="app/app.js"></script>
+		<script src="app/controllers/headbar.js"></script>
 		<script src="app/controllers/notes.js"></script>
 		<script src="app/controllers/tasks.js"></script>
 		<script src="app/directives.js"></script>
 		<script src="app/services.js"></script>
 	</head>
 
-	<body>
+	<body class="login-opened" ng-class="{ mobile : mobile == true }">
 
 		<div class="app">
-			<div class="headbar">
-				<div class="task-toggle active" task-toggle>
-					<a href="#" ><span class="fa fa-check-square-o"></span></a>
-					<span class="brand">SYNCINOTE</span>
-				</div>
-				<a href="#" class="settings pull-right"><span class="fa fa-cogs"></span></a>
+			<div class="headbar" ng-controller="headbarCtrl">
+				<a href="" class="task-toggle active" task-toggle ng-show="! mobile"><span class="fa fa-check-square-o"></span></a>
+				<a href="#/" class="inline" ng-show="isEditorActive() && mobile" ng-click="activateList()"><span class="fa fa-arrow-left"></span></a>
+				<span class="brand" ng-show="! mobile">SYNCINOTE</span>
+				<span class="brand inline" ng-show="mobile">SYCN</span>
+				<a href="#" class="pull-right" ng-click="activateTask()" ng-show="mobile"><span class="fa fa-check-square-o"></span></a>
 			</div>
 
-
 			<div class="wide-container">
-				<div class="tasks" ng-controller="tasksCtrl">
+				<div class="tasks module" ng-controller="tasksCtrl">
 					<div class="head">
-						Liste des tâches
+						<span class="title">Liste des tâches</span>
 						<a href="" class="pull-right" ng-click="clear(true)"><span class="fa fa-trash-o"></span></a>
 					</div>
 					<div class="add">
@@ -65,40 +66,42 @@
 						<div class="list">
 							<div class="sync" ng-show="sync == 0">Synchronisation en cours</div>
 							<div class="empty" ng-show="tasks.length == 0 && firstSync == true">Aucune tâche</div>
-							<div class="task" ng-repeat="task in tasks" ng-click="update(task)" ng-class="{done: task.done}">
+							<div class="task" ng-repeat="task in tasks" ng-click="check(task)" ng-class="{done: task.done}">
 								{{ task.name }}
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="notes">
-					<div class="left" ng-controller="notesListCtrl">
-						<div class="head">
-							<span class="title">Notes</span>
-							<input type="text" class="search pull-right" ng-model="search" placeholder="Recherche">
-							<a href="#/notes/add" class="add pull-right"><span class="fa fa-plus"></span></a>
-						</div>
-						
-						<div class="list-container">
-							<div class="list">
-								<div ng-repeat="note in notes | filter : search" ng-click="open(note.id)" ng-class="{ active : note.id == id }" class="note">
-									<h1 class="title">{{ note.title }}</h1>
-									<div class="content">{{ note.content }}</div>
-								</div>
+
+				<div class="notes-list module" ng-controller="notesListCtrl">
+					<div class="head">
+						<span class="title">Notes</span>
+						<input type="text" class="search pull-right" ng-model="search" placeholder="Recherche">
+						<a href="#/notes/add" class="add pull-right" ng-click="id = 0"><span class="fa fa-plus"></span></a>
+					</div>
+					
+					<div class="list-container">
+						<div class="list">
+							<div class="sync" ng-show="sync == 0">Synchronisation en cours</div>
+							<div class="empty" ng-show="notes.length == 0 && sync > 0">Aucune note</div>
+							<div ng-repeat="note in notes | filter : search" ng-click="open(note.id)" ng-class="{ active : note.id == getNoteId() }" class="note">
+								<h1 class="title">{{ note.title }}</h1>
+								<div class="content">{{ note.content }}</div>
 							</div>
 						</div>
 					</div>
-					<div class="right">
-						<div class="editor" ng-view>
-							test
-						</div>
+				</div> <!-- /notes-list -->
+
+				<div class="notes-editor module">
+					<div class="editor" ng-view>
+						<div class="empty">Aucune note ouverte</div>
 					</div>
-				</div>
-			</div> <!-- /container -->
-		</div>
+				</div> <!-- /notes-editor -->
+			</div> <!-- /wide-container -->
+		</div> <!-- /app -->
 		
 
-		<div class="login">
+		<div class="login active">
 			<div class="login-overlay">
 				<div class="login-modal">
 					<div class="header">
@@ -106,11 +109,15 @@
 					</div>
 					<div class="content">
 						<p>Bienvenue sur SynciNote. Pour commencer à utiliser à l'application, synchroniser votre compte Dropbox !</p>
-						<p><button class="btn btn-default" ng-click="client.authenticate();">Autoriser l'application</button></p>
+						<p class="button"><button class="btn btn-dropbox" ng-click="client.authenticate();"><span class="fa fa-dropbox"></span> Autoriser l'application</button></p>
 					</div>
-
 				</div>
 			</div>
+		</div> <!-- /login -->
+
+		<div class="loading">
+			<h1>SYNCINOTE</h1>
+			<div class="spinner"></div>
 		</div>
 	</body>
 </html>

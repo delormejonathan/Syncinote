@@ -1,12 +1,8 @@
-var SynciNote = angular.module('SynciNote' , [  
-												'ngRoute',
-												'directives'
-											 ]);
+var SynciNote = angular.module('SynciNote' , [ 'ngRoute' , 'directives' ]);
 
-SynciNote.run(function($rootScope) {
+SynciNote.run(function($rootScope, $location) {
 	$rootScope.client = new Dropbox.Client({key: "fjt0qeyv21dhzri"});
 
-	// Try to finish OAuth authorization.
 	$rootScope.client.authenticate({interactive: false}, function (error) {
 		if (error) {
 			console.log('Authentication error: ' + error);
@@ -14,13 +10,16 @@ SynciNote.run(function($rootScope) {
 	});
 
 	if ($rootScope.client.isAuthenticated()) {
-	    $rootScope.noteCount = 0;
+		$('body').removeClass('login-opened');
+		$('.login').removeClass('active');
 	}
+
+	if (jQuery.browser.mobile)
+		$rootScope.mobile = true;
 	else
-	{
-		$('.app').addClass('login-opened');
-		$('.login').addClass('active');
-	}
+		$rootScope.mobile = false;
+
+	$location.path('/');
 });
 
 

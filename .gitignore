@@ -1,2 +1,4 @@
 Capfile
-config/deploy.rb
+/css/dist/*
+/deployment
+/node_modules

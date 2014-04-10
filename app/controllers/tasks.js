@@ -1,12 +1,10 @@
-SynciNote.controller('tasksCtrl', function ($rootScope , $scope, $http, dropboxService) {
+SynciNote.controller('tasksCtrl', function ($rootScope , $scope, $http, dropboxService, loadingService) {
 	$scope.name = null;
 	$scope.tasks = [];
 	$scope.taskTable = null;
 	$scope.sync = 0;
 
-	// Dropbox API
-	if (dropboxService.isAuth())
-	{
+	if (dropboxService.isAuth()) {
 		dropboxService.getDatastore(function (datastore) {
 			$scope.taskTable = datastore.getTable('tasks');
 			$scope.updateList();
@@ -15,8 +13,8 @@ SynciNote.controller('tasksCtrl', function ($rootScope , $scope, $http, dropboxS
 	}
 
 	$scope.updateList = function () {
-		$scope.tasks = [];
-		var records = $scope.taskTable.query();
+		var records 	= $scope.taskTable.query();
+		$scope.tasks 	= [];
 
 		records.sort(function (taskA, taskB) {
 			if (taskB.get('done')) return -1;
@@ -28,21 +26,21 @@ SynciNote.controller('tasksCtrl', function ($rootScope , $scope, $http, dropboxS
 		for (var i = 0; i < records.length; i++) {
 			var record = records[i];
 			$scope.tasks.push({
-					'id' : record.getId(),
-					'name' : record.get('name'),
-					'done' : record.get('done'), 
-					'created' : moment(record.get('created'))
-				});
-
+				'id' : record.getId(),
+				'name' : record.get('name'),
+				'done' : record.get('done'), 
+				'created' : moment(record.get('created'))
+			});
 		}
 
+		$scope.sync++;
 		$scope.clear();
 
-		$scope.sync++;
-
-		if ($scope.sync < 2)
+		if(!$scope.$$phase) {
 			$scope.$apply();
+		}
 
+		loadingService.nextStep();
 	}
 
 	$scope.clear = function(force) {
@@ -59,7 +57,7 @@ SynciNote.controller('tasksCtrl', function ($rootScope , $scope, $http, dropboxS
 		}
 	}
 
-	$scope.update = function(task) {
+	$scope.check = function(task) {
 		var record = $scope.taskTable.get(task.id);
 		record.set('done' , ! task.done);
 		record.set('updated' , new Date());
@@ -76,5 +74,4 @@ SynciNote.controller('tasksCtrl', function ($rootScope , $scope, $http, dropboxS
 			$scope.name = null;
 		}
 	}
-
 });

@@ -1,0 +1,20 @@
+{
+  "name": "Syncinote",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "gulp": "~3.6.0"
+  },
+  "devDependencies": {
+    "gulp": "~3.6.0",
+    "gulp-less": "~1.2.3",
+    "gulp-plumber": "~0.5.6"
+  },
+  "scripts": {
+    "build": "gulp",
+    "watch": "gulp watch"
+  },
+  "author": "Jonathan DELORME",
+  "license": "MIT"
+}

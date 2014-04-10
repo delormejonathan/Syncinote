@@ -1,6 +1,15 @@
-SynciNote.service('dropboxService', function($rootScope) {
-	this.datastoreManager = null;
-	this.datastore = null;
+SynciNote
+
+/*
+	* This service manages connections with Dropbox API.
+*/
+.service('dropboxService', function($rootScope) {
+	this.datastoreManager 	= null;
+	this.datastore 			= null;
+
+    this.getClient = function () {
+        return $rootScope.client;
+    }
 
 	this.isAuth = function () {
 		return this.getClient().isAuthenticated();
@@ -29,15 +38,67 @@ SynciNote.service('dropboxService', function($rootScope) {
 		}
 		else
 		{
-			callback($rootScope.datastore)
+			callback($rootScope.datastore);
 		}
 	}
+})
 
-    this.getClient = function () {
-        return $rootScope.client;
-    }
+/* 
+	* This service manages modules in mobile view.
+	* It also gives the current notes opened for the controllers.
+*/
+.service('moduleService' , function() {
+	this.noteId			= null;
 
-    this.getTable = function (table_name) {
-    	return this.getDatastore().getTable(table_name);
-    }
+	this.isTaskActive 	= function() {
+		return $('.app .tasks').is(":visible");
+	}
+	this.isListActive 	= function() {
+		return $('.app .notes-list').is(":visible");
+	}
+	this.isEditorActive 	= function() {
+		return $('.app .notes-editor').is(":visible");
+	}
+	this.getNoteId = function () {
+		return this.noteId;
+	}
+
+	this.activateTask = function () {
+		$('.mobile .module').hide();
+		$('.mobile .tasks').show();
+	}
+
+	this.activateList = function () {
+		$('.mobile .module').hide();
+		$('.mobile .notes-list').show();
+	}
+
+	this.activateEditor = function () {
+		$('.mobile .module').hide();
+		$('.mobile .notes-editor').show();
+	}
+})
+
+/* 
+	* This service manages loading spinner at boot.
+*/
+.service('loadingService' , function() {
+	this.steps 		= 2;
+	this.loadState 	= 0;
+
+	this.nextStep = function() {
+		this.loadState++;
+
+		if (this.loadState == this.steps)
+			this.done();
+	}
+
+	this.done = function() {
+		setTimeout(function() {
+			$('.loading').slideUp(700, function() {
+				$('.loading').remove();
+			});
+		},800);
+		
+	}
 });

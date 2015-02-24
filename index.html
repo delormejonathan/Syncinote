@@ -79,14 +79,14 @@
 						<input type="text" class="search pull-right" ng-model="search" placeholder="Recherche">
 						<a href="#/notes/add" class="add pull-right" ng-click="id = 0"><span class="fa fa-plus"></span></a>
 					</div>
-					
+
 					<div class="list-container">
 						<div class="list">
 							<div class="sync" ng-show="sync == 0">Synchronisation en cours</div>
 							<div class="empty" ng-show="notes.length == 0 && sync > 0">Aucune note</div>
 							<div ng-repeat="note in notes | filter : search" ng-click="open(note.id)" ng-class="{ active : note.id == getNoteId() }" class="note">
 								<h1 class="title">{{ note.title }}</h1>
-								<div class="content">{{ note.content }}</div>
+								<div class="content">{{ note.content | limitTo:300 }}{{ note.content.length > 300 ? '&hellip;'  : '' }}</div>
 							</div>
 						</div>
 					</div>
@@ -99,7 +99,7 @@
 				</div> <!-- /notes-editor -->
 			</div> <!-- /wide-container -->
 		</div> <!-- /app -->
-		
+
 
 		<div class="login active">
 			<div class="login-overlay">

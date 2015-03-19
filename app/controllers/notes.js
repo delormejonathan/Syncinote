@@ -32,6 +32,7 @@ SynciNote.controller('notesEditCtrl', function ($rootScope, $scope, $location, $
 				moduleService.noteId = null;
 			}
 		});
+		$('.notes-editor .title').focus();
 	}
 
 	$scope.save = function() {

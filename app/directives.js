@@ -101,7 +101,7 @@ directive('epiceditor', function() {
 					preview: '../../css/vendor/epiceditor/preview/github.css',
 					editor: '../../css/vendor/epiceditor/editor/epic-dark.css'
 				},
-				focusOnLoad: true,
+				focusOnLoad: false,
 				clientSideStorage: false,
 				autogrow: {
 					minHeight: $(element).parent().resize(function() {
